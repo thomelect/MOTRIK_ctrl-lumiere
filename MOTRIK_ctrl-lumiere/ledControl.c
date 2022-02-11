@@ -16,19 +16,19 @@
 volatile uint8_t cinqCentMSFlag = 0;
 uint8_t flashFlag = 0;
 
-//Prototypes de fonctions privés
+//Prototypes de fonctions privÃ©s
 /**
 *@brief  Fonction d'initialisation du timer #1 utiliser pour le faire clignoter le ruban de DELs.
 */
 void _timer1Init();
 
 /**
-*@brief  Fonction d'initialisation du timer #4 utilisé pour le PWM du ruban de DELs.
+*@brief  Fonction d'initialisation du timer #4 utilisÃ© pour le PWM du ruban de DELs.
 */
 void _timer4Init();
 
 /**
-*@brief  Interruption qui met cinqCentMSFlag à 1 à chaques 250ms.
+*@brief  Interruption qui met cinqCentMSFlag Ã  1 Ã  chaques 250ms.
 */
 ISR(TIMER1_COMPA_vect)
 {
@@ -89,8 +89,8 @@ void ledControl(uint8_t stateSystem)
 void _timer1Init()
 {
 	//TCCR1A : COM1A1 COM1A0 COM1B1 COM1B0 COM1C1 COM1C0 WGM11 WGM10
-	//TCCR1B: ICNC1 ICES1 – WGM13 WGM12 CS12 CS11 CS10
-	//TIMSK1: – – ICIE1 – OCIE1C OCIE1B OCIE1A TOIE1
+	//TCCR1B: ICNC1 ICES1 â€“ WGM13 WGM12 CS12 CS11 CS10
+	//TIMSK1: â€“ â€“ ICIE1 â€“ OCIE1C OCIE1B OCIE1A TOIE1
 	TCCR1B = (1<<WGM12); //mode CTC.
 	TCCR1B |= (1<<CS12); //Prescaler de 256.
 	TIMSK1 |= (1<<OCIE1A);

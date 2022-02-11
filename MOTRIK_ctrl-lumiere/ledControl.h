@@ -14,13 +14,13 @@
 #define DEL_B_INIT()		DDRD |= (1<<7) //Init output B.
 
 /**
-*@brief  Fonction qui assure le contrôle des l'état, de la luminosité et de la couleur du ruban de DELs en fonction du paramètre reçu.
-*@param  stateSystem Code d'état du ruban de DELs.
+*@brief  Fonction qui assure le contrÃ´le des l'Ã©tat, de la luminositÃ© et de la couleur du ruban de DELs en fonction du paramÃ¨tre reÃ§u.
+*@param  stateSystem Code d'Ã©tat du ruban de DELs.
 */
 void ledControl(uint8_t stateSystem);
 
 /**
-*@brief  Fonction d'initialisation des différents I/O et fonctions.
+*@brief  Fonction d'initialisation des diffÃ©rents I/O et fonctions.
 */
 void ledControlInit();
 
