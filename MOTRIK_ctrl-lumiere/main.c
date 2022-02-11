@@ -1,13 +1,13 @@
 /**
- * @file 		  main.c
+ * @file 	  main.c
  * @brief 	  Partie du projet Motrik qui sera utilisé afin de contrôler les lumières de la moto.
  * @author 	  Thomas Desrosiers
  * @version   1.0
- * @date 		  2022/02/11
+ * @date 	  2022/02/11
 
- * @mainpage 	PFI-modbus_slave-capteur
+ * @mainpage  MOTRIK_ctrl-lumiere
  * @author 	  Thomas Desrosiers
- * @section 	MainSection1 Description
+ * @section   MainSection1 Description
               Partie du projet Motrik qui sera utilisé afin de contrôler les lumières de la moto.
 */
 
