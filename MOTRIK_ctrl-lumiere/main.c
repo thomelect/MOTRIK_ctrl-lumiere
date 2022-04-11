@@ -15,8 +15,11 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define DEL_1_INIT()	(DDRC |= (1<<7)) //initialise PC7 comme étant une sortie.
 
+/**********
+ * DEFINE *
+ **********/
+#define DEL_1_INIT()	(DDRC |= (1<<7)) //initialise PC7 comme étant une sortie.
 #define DEL_1(val) (OCR4A = val) // Valeur PWM output R.
 #define DEL_2(val) (OCR4B = val) // Valeur PWM output V.
 #define DEL_3(val) (OCR4D = val) // Valeur PWM output B.
@@ -26,11 +29,17 @@
 #define INCREMENT_DEL 25
 
 
+/************
+ * VARIABLE *
+ ************/
 volatile uint8_t cinqCentMsFlag = 0;
 volatile uint8_t cntCinqCentMs = 0;
-
 uint8_t intensiteDEL1 = 0;
 
+
+/**************************
+ * PROTOTYPES DE FONCTION *
+ **************************/
 /**
 *@brief Fonction d'initialisation des différents I/O et fonctions.
 */
@@ -46,6 +55,10 @@ void timer1Init();
  */
 void timer4Init();
 
+
+/********
+ * MAIN *
+ ********/
 int main(void)
 {
   miscInit();
@@ -62,6 +75,10 @@ int main(void)
   }
 }
 
+
+/****************
+ * INTERRUPTION *
+ ****************/
 /**
  * @brief  Interruption qui met cinqCentMSFlag à 1 à chaques 250ms.
  */
@@ -75,6 +92,10 @@ ISR(TIMER1_COMPA_vect)
 	}
 }
 
+
+/************************
+ * DÉFINITION FONCTIONS *
+ ************************/
 void miscInit(void)
 {
 	timer1Init(); //Initialisation des timers
