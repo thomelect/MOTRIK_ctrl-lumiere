@@ -13,7 +13,6 @@
 
 #define F_CPU 16000000UL
 #include <avr/io.h>
-#include <avr/interrupt.h>
 
 
 /**********
@@ -24,13 +23,12 @@
 #define OUT_3_INIT()	(DDRB |= (1<<7)) //initialise PB7 comme étant une sortie. */
 #define OUT_1_SET(a)	(PORTB = (PORTB & ~(1<<4)) | ((a && 1) << 4)) //État de la sortie #1.
 #define OUT_2_SET(a)	(PORTB = (PORTB & ~(1<<5)) | ((a && 1) << 5)) //État de la sortie #2.
-#define OUT_3_SET(a)	(PORTB = (PORTB & ~(1<<7)) | ((a && 1) << 7)) //État de la sortie #3. */
+#define OUT_3_SET(a)	(PORTB = (PORTB & ~(1<<7)) | ((a && 1) << 7)) //État de la sortie #3.
 #define OUT_1_TGL()		(PORTB ^= (1<<4)) //État de la sortie #1. */
 #define OUT_2_TGL()		(PORTB ^= (1<<5)) //État de la sortie #2. */
 #define OUT_3_TGL()		(PORTB ^= (1<<7)) //État de la sortie #3. */
-#define OUT_1(val) 		(OCR4A = val) // Valeur PWM output R.
-#define OUT_2(val) 		(OCR4B = val) // Valeur PWM output V.
-#define OUT_3(val) 		(OCR0A = val) // Valeur PWM output B.
+#define OUT_2(val) 		(OCR1A = val) // Valeur PWM output V.
+#define OUT_3(val) 		(OCR1C = val) // Valeur PWM output B.
 
 #define _TIMER_1_TOP 100
 #define _TIMER_1_CYC_CNT 25
@@ -66,7 +64,7 @@ int main(void)
 {
   miscInit();
   OUT_1_SET(1);
-  OUT_2(50);
+  OUT_2(2 - 1);
   OUT_3(100);
   while (1)
   {
@@ -91,9 +89,10 @@ void timer1Init(void)
 	// TCCR1A : COM1A1 COM1A0 COM1B1 COM1B0 COM1C1 COM1C0 WGM11 WGM10
 	// TCCR1B: ICNC1 ICES1 – WGM13 WGM12 CS12 CS11 CS10
 	// TIMSK1: – – ICIE1 – OCIE1C OCIE1B OCIE1A TOIE1
-	TCCR0A = (1 << COM0A1) | (1 << WGM00) | (1 << WGM01); // Pwm sur OCR1A et OCR1C.
-	TCCR0B = (1 << CS02) | (1 << CS00); // mode CTC.
-	TCCR1B |= (1 << CS11); // Prescaler de 1024.
-	OCR0A = 127 - 1; // 62.5ns * 64 * 250 * 5 = 5ms.
-	//sei();
+	TCCR1A = (1 << COM1A1) | (1 << COM1C1); // Pwm sur OCR1A et OCR1C.
+	TCCR1A |= (1 << WGM10); // Fast PWM, 8-bit top -> 0x00FF.
+	TCCR1B = (1 << WGM12); // Fast PWM, 8-bit top -> 0x00FF.
+	TCCR1B |= (1 << CS11) | (1 << CS11); // Prescaler de 1024. 
+	OCR1A = 0; // 62.5ns * 64 * 250 * 5 = 5ms.
+	OCR1C = 0;
 }
