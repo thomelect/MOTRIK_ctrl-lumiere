@@ -39,7 +39,7 @@
 /************
  * VARIABLE *
  ************/
-/* Variables utilisés pour le fade. */
+/* Variables utilisées pour le fade. */
 volatile uint16_t msCntFade = 0; // Compteur utilisés pour compter 50 fois un délai de 1ms pour le fade de la sortie.
 volatile uint8_t msFlagFade = 0; // Flags qui est mis à 1 à chaques 50ms pour le fade de la sortie.
 uint8_t valueOut;
@@ -165,7 +165,7 @@ void execRxCommand(void)
 		outState(1, INIT_STATE_OUT_1);
 		outState(2, INIT_STATE_OUT_2);
 		outState(3, INIT_STATE_OUT_3);
-	break;
+		break;
 	case FADE:
 		fade();
 		break;
@@ -206,9 +206,6 @@ void miscInit(void)
 	timer0Init(); // Initialisation des timers
 	timer1Init();
 	usartInit(1000000, F_CPU);
-	// 	OUT_1_INIT();
-	// 	OUT_2_INIT();
-	// 	OUT_3_INIT();
 	OUT_INIT();
 	outState(1, INIT_STATE_OUT_1);
 	outState(2, INIT_STATE_OUT_2);
@@ -220,8 +217,7 @@ void outState(uint8_t numSortie, uint8_t valSortie)
 	switch (numSortie)
 	{
 	case 1:
-		if (valSortie)
-			OUT_1_SET(valSortie);
+		OUT_1_SET(valSortie);
 		break;
 	case 2:
 		OUT_2(valSortie);
@@ -290,24 +286,6 @@ void timer0Init(void)
 	TIMSK0 = 0b00000010; // Output compare match A interrupt enable.
 	OCR0A = top - 1;	 // 62.5ns * 64 * 250 = 1ms.
 	sei();
-}
-
-void outState(uint8_t numSortie, uint8_t valSortie)
-{
-	switch (numSortie)
-	{
-	case 1:
-
-		if (valSortie)
-			OUT_1_SET(valSortie);
-		break;
-	case 2:
-		OUT_2(valSortie);
-		break;
-	case 3:
-		OUT_3(valSortie);
-		break;
-	}
 }
 
 void timer1Init(void)
