@@ -13,6 +13,7 @@
 
 #define F_CPU 16000000UL
 #include <avr/io.h>
+#include "usart.h"
 
 
 /**********
@@ -43,6 +44,9 @@ volatile uint8_t cntCinqCentMs = 0;
 uint8_t intensiteDEL1 = 0;
 
 
+enum COMM_STATES {WAIT,NUM,DATA,VALIDATE};
+enum COMM_STATES commState = WAIT;
+
 /**************************
  * PROTOTYPES DE FONCTION *
  **************************/
@@ -50,12 +54,14 @@ uint8_t intensiteDEL1 = 0;
 *@brief Fonction d'initialisation des différents I/O et fonctions.
 */
 void miscInit(void);
-
+void lightsAssingment(void);
 /**
  *@brief  Fonction d'initialisation du timer 0 avec une période de 4ms.
  */
 void timer1Init();
-
+uint8_t rxData = 0;
+uint8_t numLumiere = 0;
+uint8_t valLumiere = 0;
 
 /********
  * MAIN *
@@ -63,12 +69,57 @@ void timer1Init();
 int main(void)
 {
   miscInit();
-  OUT_1_SET(1);
-  OUT_2(2 - 1);
-  OUT_3(100);
   while (1)
   {
-
+	  if(usartRxAvailable())
+	  {
+		  rxData = usartRemRxData();
+		  switch (commState)
+		  {
+			  default : // Pour WAIT
+				  if (rxData == '<')
+				  {
+					  commState = NUM;
+				  }
+				  break;
+			  case NUM :
+				  numLumiere = rxData;
+				  if ((numLumiere >= 1)&&(numLumiere <= 3))
+				  {
+					  commState = DATA;
+				  }
+				  else
+					  commState = WAIT;
+				  break;
+			  case DATA :
+				  if(numLumiere == 1)
+				  {
+					  if ((rxData == 0) || (rxData == 1))
+					  {
+						  valLumiere = rxData;
+						  commState = VALIDATE;
+					  }
+					  else
+						commState = WAIT;
+				  }
+				  else
+				  {
+					  if ((rxData >= 0)&&(rxData <= 255))
+					  {
+						  valLumiere = rxData;
+						  commState = VALIDATE;
+					  }
+					  else
+						  commState = WAIT;
+				  }
+				  break;
+			  case VALIDATE :
+				  if(rxData == '>')
+				   	  lightsAssingment();
+				  commState = WAIT;
+				  break;
+		  }
+	  }
   }
 }
 
@@ -95,4 +146,20 @@ void timer1Init(void)
 	TCCR1B |= (1 << CS11) | (1 << CS11); // Prescaler de 1024. 
 	OCR1A = 0; // 62.5ns * 64 * 250 * 5 = 5ms.
 	OCR1C = 0;
+}
+
+void lightsAssingment(void)
+{
+	switch(numLumiere)
+	{
+		case 1:
+			OUT_1_SET(valLumiere);
+			break;
+		case 2:
+			OUT_2(valLumiere);
+			break;
+		case 3:
+			OUT_3(valLumiere);
+			break;
+	}
 }
