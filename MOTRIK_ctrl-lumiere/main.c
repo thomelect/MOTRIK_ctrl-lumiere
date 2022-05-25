@@ -42,10 +42,11 @@
 /* Variables utilisées pour le fade. */
 volatile uint16_t msCntFade = 0; // Compteur utilisés pour compter 50 fois un délai de 1ms pour le fade de la sortie.
 volatile uint8_t msFlagFade = 0; // Flags qui est mis à 1 à chaques 50ms pour le fade de la sortie.
-uint8_t valueOut;
+uint8_t valueOut = 0;
+int increment = INCREMENT_STEP; // Valeur actuelle de l'incrément pour le fade.
 
 /* Variables nécessaires à la communication sérielle: */
-uint8_t rxDataSize;
+uint8_t rxDataSize = 0;
 uint8_t rxDataCnt = 0; // Compteur de donnés reçus.
 uint8_t rxData[_MAX_RXDATASIZE_];
 uint8_t rxErrorCommCnt = 0;
@@ -182,8 +183,6 @@ void execRxCommand(void)
 
 void fade(void)
 {
-	int increment = INCREMENT_STEP; // Valeur actuelle de l'incrément pour le fade.
-
 	if (valueOut <= FADE_FLOOR) // Lorsque oc4aValue à atteint son minimum.
 	{
 		increment = INCREMENT_STEP;
